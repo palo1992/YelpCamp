@@ -1,0 +1,36 @@
+<%- include("../partials/header"); %>
+    <div class="row">
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-6">
+                    <img src="<%= user.avatar %>" class="card-img" alt="<%=user.username%>'s avatar img">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">
+                            <%= user.firstName +" "+ user.lastName %>
+                        </h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.
+                        </p>
+                        <h5 class="card-title">
+                            <%=user.username%>'s campgrounds:
+                        </h5>
+                        <ul>
+                            <% campgrounds.forEach((campground) => { %>
+                                <li>
+                                    <a href="/campgrounds/<%= campground.id %>">
+                                        <%= campground.name%>
+                                    </a>
+                                </li>
+                                <% }); %>
+                        </ul>
+                        <a href="/follow/<%= user.id %>" class="btn btn-sm btn-primary float-right">
+                                Follow <%= user.username %>
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <%- include("../partials/footer"); %>

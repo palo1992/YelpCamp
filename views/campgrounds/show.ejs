@@ -1,0 +1,149 @@
+<%- include("../partials/header"); %>
+    <div class="row">
+        <div class="col-md-3">
+            <p clas="lead">Yelp Camp</p>
+            <div class="list-group">
+                <li class="list-group-item active">Info 1</li>
+                <li class="list-group-item">Info 2</li>
+                <li class="list-group-item">Info 3</li>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <img class="card-img-top" src="<%= campground.img %>">
+                <div class="card-body">
+                    <div class="float-left">
+                        <h4 class="card-title">
+                            <%= campground.name %>
+                        </h4>
+                        <p class="card-text">
+                            <%= campground.description %>
+                        </p>
+                        <p class="card-subtext">
+                            <em>Submitted by: 
+                                <a href="/users/<%= campground.author.id %>">
+                                    <%= campground.author.username %>
+                                </a>
+                                , <%= moment(campground.createdAt).fromNow() %>
+                            </em>
+                        </p>
+                        <form action="/campgrounds/<%= campground._id %>/like" method="POST">
+                            <div class="btn-group">
+                                <% if (currentUser && campground.likes.some(function (like) {
+                                    return like.equals(currentUser._id)
+                                })) { %>
+                                    <button class="btn btn-sm btn-primary">
+                                        <i class="fas fa-thumbs-up"></i> Liked (<%= campground.likes.length %>)
+                                    </button>
+                                    <% } else { %>
+                                        <button class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-thumbs-up"></i> Like (<%= campground.likes.length %>)
+                                        </button>
+                                        <% } %>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#campgroundLikes">
+                                            See more details
+                                        </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="float-right">
+                        <h5 class="card-title">
+                            <%= campground.price%> / night
+                        </h5>
+                        <% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                            <a class="btn btn-sm btn-warning" href="<%= campground._id %>/edit">Edit!</a>
+                            <form class="delete-form " action="<%= campground._id %>?_method=DELETE" method="POST">
+                                <button class="btn btn-sm btn-danger">Delete!</button>
+                            </form>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="text-right">
+                        <a class="btn btn-sm btn-secondary" href="/campgrounds">Go Back</a>
+                        <a class="btn btn-sm btn-info" href="/campgrounds/<%= campground._id%>/comments/new">Add a new comment</a>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <% campground.comments.forEach((comment) => { %>
+                            <div class="col-md-12 mb-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-left">
+                                            <p class="card-title">
+                                                <%= comment.author.username %>
+                                            </p>
+                                            <p class="card-text">
+                                                <%= comment.text %>
+                                            </p>
+                                        </div>
+                                        <div class="float-right">
+                                            <p>
+                                                <%= moment(comment.createdAt).fromNow() %>
+                                            </p>
+                                            <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                                                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                                                <form class="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                                    <button class="btn btn-sm btn-danger">Delete!</button>
+                                                </form>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Campground Likes Modal -->
+    <div id="campgroundLikes" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Campground likes:
+                        <%= campground.likes.length %>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Liked by:
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% campground.likes.forEach(function(like) { %>
+                                <tr>
+                                    <td>
+                                        <span class="badge">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <a href="/users/<%= like._id%>">
+                                            <%= like.username %>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                    <% if (campground.likes.length === 0) { %>
+                                        <tr>
+                                            <td><em>No likes yet.</em></td>
+                                        </tr>
+                                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include("../partials/footer"); %>

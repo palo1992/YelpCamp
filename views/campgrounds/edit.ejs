@@ -1,0 +1,25 @@
+<%- include("../partials/header")%>
+
+    <div class="row justify-content-center">
+        <div class="col-md-12 text-center">
+            <h1>
+                Edit
+                <%= campground.name %>
+            </h1>
+        </div>
+        <div class="col-xs-12 col-md-6 col-lg-4">
+            <form class="form-signin" action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                <input class="form-control" type="text" name="campground[name]" value="<%=campground.name %>">
+                <label class="sr-only" for="image">Img</label>
+                <input type="file" id="image" name="img" accept="image/*">
+                <input class="form-control" type="text" name="campground[description]" value="<%=campground.description%>">
+                <input class="form-control" type="number" name="campground[price]" value="<%=campground.price%>" min="0.00" step="0.01">
+                <input class="btn btn-lg btn-block btn-outline-warning" type="submit" value="Edit!">
+            </form>
+            <a class="form-signin d-block" href="/campgrounds/<%= campground._id %>">Go Back!</a>
+        </div>
+    </div>
+
+
+
+    <%- include("../partials/footer")%>
