@@ -65,7 +65,7 @@ app.use(async function (req, res, next) {
 app.locals.moment = require("moment");
 
 //  Mongoose Connection
-const dbUrl = process.env.DB_URL || "mongodb://localhost/yelp_camp";
+const dbUrl = process.env.MONGODB_URI || "mongodb://localhost/yelp_camp";
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 //  LOADING PAGES
 app.use(indexRoutes);
